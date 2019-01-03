@@ -14,6 +14,9 @@ namespace EStalls.Data.Models
         public Guid Id { get; set; }
 
         [Required]
+        public string Uid { get; set; }
+
+        [Required]
         [StringLength(100)]
         public string Title { get; set; }
 
@@ -27,6 +30,9 @@ namespace EStalls.Data.Models
 
         [Required]
         public string PreviewFileNames { get; set; }
+
+        [Required]
+        public string ThumbnailFileName { get; set; }
 
         [Required]
         [DataType(DataType.DateTime)]

@@ -89,9 +89,15 @@ namespace EStalls.Data.Migrations
 
                     b.Property<DateTime>("RegistrationTime");
 
+                    b.Property<string>("ThumbnailFileName")
+                        .IsRequired();
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(100);
+
+                    b.Property<string>("Uid")
+                        .IsRequired();
 
                     b.Property<DateTime>("UpdateTime");
 
