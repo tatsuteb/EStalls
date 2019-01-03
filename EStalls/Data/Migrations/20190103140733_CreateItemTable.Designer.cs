@@ -4,14 +4,16 @@ using EStalls.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EStalls.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190103140733_CreateItemTable")]
+    partial class CreateItemTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -78,8 +80,7 @@ namespace EStalls.Data.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(500);
+                        .IsRequired();
 
                     b.Property<string>("PreviewFileNames")
                         .IsRequired();
@@ -90,37 +91,13 @@ namespace EStalls.Data.Migrations
                     b.Property<DateTime>("RegistrationTime");
 
                     b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(100);
+                        .IsRequired();
 
                     b.Property<DateTime>("UpdateTime");
 
                     b.HasKey("Id");
 
                     b.ToTable("Item");
-                });
-
-            modelBuilder.Entity("EStalls.Data.Models.ItemDlInfo", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("DlFileNames")
-                        .IsRequired();
-
-                    b.Property<Guid>("ItemId");
-
-                    b.Property<DateTime>("RegistrationTime");
-
-                    b.Property<DateTime>("UpdateTime");
-
-                    b.Property<string>("Version")
-                        .IsRequired()
-                        .HasMaxLength(50);
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ItemDlInfo");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
