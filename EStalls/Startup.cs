@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using EStalls.Data;
 using EStalls.Data.Models;
+using EStalls.Services.Items;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -49,14 +50,19 @@ namespace EStalls
                 .AddDefaultUI(UIFramework.Bootstrap4)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
+            // サービス
+            services.AddTransient<IItemService, ItemService>();
+
             services.AddAuthorization(options =>
             {
+                // アクセス制限用ポリシーを追加
                 options.AddPolicy(Constants.PolicyTypes.RequireSellerRole, policy => policy.RequireRole(Constants.RoleTypes.Seller));
             });
 
             services.AddMvc()
                 .AddRazorPagesOptions(options =>
                 {
+                    // フォルダー、ページごとにポリシーを適用
                     options.Conventions
                         .AuthorizeAreaFolder("Seller", "/Items", Constants.PolicyTypes.RequireSellerRole);
                 })
