@@ -13,5 +13,8 @@ namespace EStalls.Data
             : base(options)
         {
         }
+
+        public DbSet<Item> Item { get; set; }
+        public DbSet<ItemDlInfo> ItemDlInfo { get; set; }
     }
 }
