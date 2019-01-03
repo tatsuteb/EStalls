@@ -49,8 +49,18 @@ namespace EStalls
                 .AddDefaultUI(UIFramework.Bootstrap4)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy(Constants.PolicyTypes.RequireSellerRole, policy => policy.RequireRole(Constants.RoleTypes.Seller));
+            });
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc()
+                .AddRazorPagesOptions(options =>
+                {
+                    options.Conventions
+                        .AuthorizeAreaFolder("Seller", "/Items", Constants.PolicyTypes.RequireSellerRole);
+                })
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

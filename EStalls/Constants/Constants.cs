@@ -9,4 +9,9 @@ namespace EStalls.Constants
     {
         public static string Seller => "Seller";
     }
+
+    public static class PolicyTypes
+    {
+        public static string RequireSellerRole => "RequireSellerRole";
+    }
 }
