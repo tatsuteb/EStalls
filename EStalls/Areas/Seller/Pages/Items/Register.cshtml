@@ -5,3 +5,62 @@
 }
 
 <h1>@ViewData["Title"]</h1>
+
+<partial name="_StatusMessage" for="StatusMessage" />
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-route-returnUrl="@Model.ReturnUrl" method="post" enctype="multipart/form-data">
+
+            <div asp-validation-summary="All" class="text-danger"></div>
+
+            <div class="form-group">
+                <label asp-for="Input.ThumbnailFile"></label>
+                <input asp-for="Input.ThumbnailFile" class="form-control-file" />
+                <span asp-validation-for="Input.ThumbnailFile" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Input.PreviewFiles"></label>
+                <input asp-for="Input.PreviewFiles" class="form-control-file" />
+                <span asp-validation-for="Input.PreviewFiles" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Input.DlFiles"></label>
+                <input asp-for="Input.DlFiles" class="form-control-file" />
+                <span asp-validation-for="Input.DlFiles" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Input.Title"></label>
+                <input asp-for="Input.Title" class="form-control" />
+                <span asp-validation-for="Input.Title" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Input.Description"></label>
+                <textarea asp-for="Input.Description" class="form-control"></textarea>
+                <span asp-validation-for="Input.Description" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Input.Price"></label>
+                <input asp-for="Input.Price" class="form-control" />
+                <span asp-validation-for="Input.Price" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Input.Version"></label>
+                <input asp-for="Input.Version" class="form-control" />
+                <span asp-validation-for="Input.Version" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary">投稿する</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
