@@ -1,0 +1,30 @@
+﻿@page
+@model EStalls.Areas.Identity.Pages.Account.Manage.SellerSettingsModel
+@{
+    ViewData["Title"] = "販売者設定";
+    ViewData["ActivePage"] = ManageNavPages.SellerSettings;
+}
+
+<h4>@ViewData["Title"]</h4>
+<partial name="_StatusMessage" for="StatusMessage" />
+<div class="row">
+    <div class="col-md-6">
+        <form method="post">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            @if (Model.IsSeller)
+            {
+                <input type="hidden" asp-for="Input.IsSeller" value="false" />
+                <button type="submit" class="btn btn-danger">解除</button>
+            }
+            else
+            {
+                <input type="hidden" asp-for="Input.IsSeller" value="true" />
+                <button type="submit" class="btn btn-primary">登録</button>
+            }
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
