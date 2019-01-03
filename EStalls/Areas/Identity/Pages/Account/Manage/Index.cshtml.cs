@@ -105,8 +105,14 @@ namespace EStalls.Areas.Identity.Pages.Account.Manage
                 var setEmailResult = await _userManager.SetEmailAsync(user, Input.Email);
                 if (!setEmailResult.Succeeded)
                 {
-                    var userId = await _userManager.GetUserIdAsync(user);
-                    throw new InvalidOperationException($"Unexpected error occurred setting email for user with ID '{userId}'.");
+                    foreach (var error in setEmailResult.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
+
+                    this.Username = await _userManager.GetUserNameAsync(user);
+
+                    return Page();
                 }
             }
 
