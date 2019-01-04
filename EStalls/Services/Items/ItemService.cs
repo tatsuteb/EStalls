@@ -6,9 +6,11 @@ using System.Net;
 using System.Threading.Tasks;
 using EStalls.Data;
 using EStalls.Data.Models;
+using EStalls.Utilities;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
 
 namespace EStalls.Services.Items
 {
@@ -17,140 +19,123 @@ namespace EStalls.Services.Items
         private readonly ApplicationDbContext _context;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly IHostingEnvironment _environment;
-
+        private readonly ILogger<ItemService> _logger;
 
         public ItemService(
             IHostingEnvironment environment,
             ApplicationDbContext context,
-            SignInManager<AppUser> signInManager)
+            SignInManager<AppUser> signInManager,
+            ILogger<ItemService> logger)
         {
             _environment = environment;
             _context = context;
             _signInManager = signInManager;
+            _logger = logger;
         }
 
         public async Task SaveItemAsync(InputItemModel inputItem)
         {
-            var registrationTime = DateTime.Now;
+            var previewFileNames = FileUtil.GetHtmlEncodedFileNames(inputItem.PreviewFiles.ToArray());
+            var dlFileNames = FileUtil.GetHtmlEncodedFileNames(inputItem.DlFiles.ToArray());
+            var thumbFileName = FileUtil.GetHtmlEncodedFileName(inputItem.ThumbnailFile);
 
-            var claims = this._signInManager.Context.User;
-            var user = await this._signInManager.UserManager.GetUserAsync(claims);
-            var uid = user.Id;
-
-            var previewFileNames = new List<string>();
-            foreach (var previewFile in inputItem.PreviewFiles)
-            {
-                var safeName = WebUtility.HtmlEncode(Path.GetFileName(previewFile.FileName));
-
-                previewFileNames.Add(safeName);
-            }
-
-            var dlFileNames = new List<string>();
-            foreach (var dlFile in inputItem.DlFiles)
-            {
-                var safeName = WebUtility.HtmlEncode(Path.GetFileName(dlFile.FileName));
-
-                dlFileNames.Add(safeName);
-            }
-
-            var safeThumbFileName = WebUtility.HtmlEncode(Path.GetFileName(inputItem.ThumbnailFile.FileName));
-
-            var item = await _context.Item
-                .AddAsync(new Item()
-                {
-                    Id = Guid.NewGuid(),
-                    Uid = uid,
-                    Title = inputItem.Title,
-                    Description = inputItem.Description,
-                    Price = inputItem.Price,
-                    PreviewFileNames = string.Join(",", previewFileNames),
-                    ThumbnailFileName = safeThumbFileName,
-                    RegistrationTime = registrationTime,
-                    UpdateTime = registrationTime
-                });
-
-            var itemDlInfo = await _context.ItemDlInfo
-                .AddAsync(new ItemDlInfo()
-                {
-                    Id = Guid.NewGuid(),
-                    ItemId = item.Entity.Id,
-                    Version = inputItem.Version,
-                    DlFileNames = string.Join(",", dlFileNames),
-                    RegistrationTime = item.Entity.RegistrationTime,
-                    UpdateTime = item.Entity.UpdateTime
-                });
-
-            await _context.SaveChangesAsync();
+            var itemId = Guid.NewGuid();
+            var itemDlInfoId = Guid.NewGuid();
 
 
-            // TODO: ファイルの保存をUtility化
-            var dirPath = Path.Combine(new []
-            {
-                Constants.DirNames.ItemPreviewFiles,
-                item.Entity.Id.ToString()
-            });
+            #region DBへ作品情報を保存
 
-            for (var i = 0; i < inputItem.PreviewFiles.Count; i++)
-            {
-                var file = inputItem.PreviewFiles[i];
-                var fileName = previewFileNames[i];
-
-                var filePath = await this.SaveFileAsync(file, dirPath, fileName);
-            }
-
-
-            var thumbDirPath = Path.Combine(new[]
-            {
-                dirPath,
-                Constants.DirNames.ItemThumbnailFile
-            });
-            var thumbFilePath = await this.SaveFileAsync(inputItem.ThumbnailFile, thumbDirPath, safeThumbFileName);
-
-
-            var dlDirPath = Path.Combine(new []
-            {
-                Constants.DirNames.ItemDlFiles,
-                itemDlInfo.Entity.Id.ToString()
-            });
-
-            for (var i = 0; i < inputItem.DlFiles.Count; i++)
-            {
-                var file = inputItem.DlFiles[i];
-                var fileName = dlFileNames[i];
-
-                var filePath = await this.SaveFileAsync(file, dlDirPath, fileName);
-            }
-        }
-
-        private async Task<string> SaveFileAsync(IFormFile file, string dirPath, string fileName)
-        {
-            dirPath = Path.Combine(this._environment.WebRootPath, dirPath);
-
-            if (!Directory.Exists(dirPath))
-            {
-                Directory.CreateDirectory(dirPath);
-            }
-
-            var filePath = Path.Combine(dirPath, fileName);
-
-            if (file.Length > 0)
+            using (var transaction = _context.Database.BeginTransaction())
             {
                 try
                 {
-                    using (var stream = new FileStream(filePath, FileMode.Create))
-                    {
-                        await file.CopyToAsync(stream);
-                    }
+                    var registrationTime = DateTime.Now;
+
+                    var claims = this._signInManager.Context.User;
+                    var user = await this._signInManager.UserManager.GetUserAsync(claims);
+                    var uid = user.Id;
+
+                    await _context.Item
+                        .AddAsync(new Item()
+                        {
+                            Id = itemId,
+                            Uid = uid,
+                            Title = inputItem.Title,
+                            Description = inputItem.Description,
+                            Price = inputItem.Price,
+                            PreviewFileNames = string.Join(",", previewFileNames),
+                            ThumbnailFileName = thumbFileName,
+                            RegistrationTime = registrationTime,
+                            UpdateTime = registrationTime
+                        });
+
+                    await _context.ItemDlInfo
+                        .AddAsync(new ItemDlInfo()
+                        {
+                            Id = itemDlInfoId,
+                            ItemId = itemId,
+                            Version = inputItem.Version,
+                            DlFileNames = string.Join(",", dlFileNames),
+                            RegistrationTime = registrationTime,
+                            UpdateTime = registrationTime
+                        });
+
+                    await _context.SaveChangesAsync();
+
+                    transaction.Commit();
                 }
                 catch (Exception e)
                 {
-                    Console.Write(e.Message);
+                    _logger.LogWarning(e.Message);
 
-                    return null;
+                    return;
                 }
             }
 
-            return filePath;
+            #endregion
+
+
+            #region ファイルのアップロード
+
+            try
+            {
+                // プレビューファイル
+                var dirPath = Path.Combine(new[]
+                {
+                    this._environment.WebRootPath,
+                    Constants.DirNames.ItemPreviewFiles,
+                    itemId.ToString()
+                });
+                await FileUtil.SaveFilesAsync(inputItem.PreviewFiles.ToArray(), dirPath, previewFileNames);
+
+                // サムネイルファイル
+                var thumbDirPath = Path.Combine(new[]
+                {
+                    dirPath,
+                    Constants.DirNames.ItemThumbnailFile
+                });
+                await FileUtil.SaveFileAsync(inputItem.ThumbnailFile, thumbDirPath, thumbFileName);
+
+                // ダウンロード用ファイル
+                var dlDirPath = Path.Combine(new[]
+                {
+                    this._environment.WebRootPath,
+                    Constants.DirNames.ItemDlFiles,
+                    itemDlInfoId.ToString()
+                });
+                await FileUtil.SaveFilesAsync(inputItem.DlFiles.ToArray(), dlDirPath, dlFileNames);
+            }
+            catch (Exception e)
+            {
+                _logger.LogWarning(e.Message);
+
+                return;
+            }
+
+
+            #endregion
         }
+
+        
     }
 }
