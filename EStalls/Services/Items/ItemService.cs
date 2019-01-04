@@ -10,6 +10,7 @@ using EStalls.Utilities;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace EStalls.Services.Items
@@ -18,19 +19,35 @@ namespace EStalls.Services.Items
     {
         private readonly ApplicationDbContext _context;
         private readonly SignInManager<AppUser> _signInManager;
+        private readonly UserManager<AppUser> _userManager;
         private readonly IHostingEnvironment _environment;
         private readonly ILogger<ItemService> _logger;
 
         public ItemService(
             IHostingEnvironment environment,
             ApplicationDbContext context,
+            UserManager<AppUser> userManager,
             SignInManager<AppUser> signInManager,
             ILogger<ItemService> logger)
         {
             _environment = environment;
             _context = context;
+            _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
+        }
+
+        public async Task<Item[]> GetRegisteredItemsAsync()
+        {
+            var user = await _userManager.GetUserAsync(this._signInManager.Context.User);
+            var uid = user.Id;
+
+            var items = await _context.Item
+                .AsNoTracking()
+                .Where(x => x.Uid == uid)
+                .ToArrayAsync();
+
+            return items;
         }
 
         public async Task SaveItemAsync(InputItemModel inputItem)
@@ -51,8 +68,7 @@ namespace EStalls.Services.Items
                 {
                     var registrationTime = DateTime.Now;
 
-                    var claims = this._signInManager.Context.User;
-                    var user = await this._signInManager.UserManager.GetUserAsync(claims);
+                    var user = await _userManager.GetUserAsync(this._signInManager.Context.User);
                     var uid = user.Id;
 
                     await _context.Item
