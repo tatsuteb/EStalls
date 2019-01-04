@@ -1,0 +1,23 @@
+﻿@page
+@model EStalls.Areas.Seller.Pages.Items.Manage.IndexModel
+@{
+}
+
+<div class="row justify-content-center">
+    @foreach (var item in Model.RegisteredItems)
+    {
+        <div class="col-4 col-sm px-2">
+            <figure class="card border-dark">
+                <a href="#">
+                    <img class="card-img-top"
+                         src=@($"/{Constants.DirNames.ItemPreviewFiles}/{item.Id}/{Constants.DirNames.ItemThumbnailFile}/{item.ThumbnailFileName}")
+                         alt="@item.Title" />
+                </a>
+                <figcaption class="card-body">
+                    <h5 class="card-title"><a class="text-dark" href="#">@item.Title</a></h5>
+                    <p class="card-text"><a class="text-dark" href="#">@item.Description</a></p>
+                </figcaption>
+            </figure>
+        </div>
+    }
+</div>
