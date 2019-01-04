@@ -6,17 +6,26 @@
 @{
     var displayName = "";
     var isSignedIn = SignInManager.IsSignedIn(User);
+    var isSeller = false;
 
     if (isSignedIn)
     {
         var user = await UserManager.GetUserAsync(User);
         displayName = user.DisplayName;
+
+        isSeller = await UserManager.IsInRoleAsync(user, Constants.RoleTypes.Seller);
     }
 }
 
 <ul class="navbar-nav">
 @if (isSignedIn)
 {
+    if (isSeller)
+    {
+        <li class="nav-item">
+            <a  class="nav-link text-dark" asp-area="Seller" asp-page="/Items/Register" title="Register">作品投稿</a>
+        </li>
+    }
     <li class="nav-item">
         <a  class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">@displayName</a>
     </li>
