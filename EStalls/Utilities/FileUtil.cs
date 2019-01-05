@@ -47,6 +47,11 @@ namespace EStalls.Utilities
 
         public static async Task<bool> SaveFilesAsync(IFormFile[] files, string dirPath, string[] fileNames = null)
         {
+            if (files == null)
+            {
+                return false;
+            }
+
             if (fileNames == null ||
                 fileNames.Length != files.Length)
             {
@@ -68,16 +73,27 @@ namespace EStalls.Utilities
         }
 
 
+        public static void DeleteFile(string dirPath, string fileName)
+        {
+            var filePath = Path.Combine(dirPath, fileName);
+
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+            }
+        }
+
+
         public static string GetHtmlEncodedFileName(IFormFile file)
         {
-            return WebUtility.HtmlEncode(Path.GetFileName(file.FileName));
+            return WebUtility.HtmlEncode(Path.GetFileName(file?.FileName)) ?? "";
         }
 
 
         public static string[] GetHtmlEncodedFileNames(IFormFile[] files)
         {
-            return files.Select(FileUtil.GetHtmlEncodedFileName)
-                .ToArray();
+            return files?.Select(FileUtil.GetHtmlEncodedFileName)
+                       .ToArray() ?? new string[] { };
         }
     }
 }
