@@ -19,7 +19,6 @@ using Microsoft.Extensions.Logging;
 
 namespace EStalls.Areas.Seller.Pages.Items
 {
-    [Area("Seller")]
     public class RegisterModel : PageModel
     {
         private readonly IHostingEnvironment _environment;
@@ -32,11 +31,13 @@ namespace EStalls.Areas.Seller.Pages.Items
             IHostingEnvironment environment,
             UserManager<AppUser> userManager,
             IItemService itemService,
+            IItemDlInfoService itemDlInfoService,
             ILogger<RegisterModel> logger)
         {
             _environment = environment;
             _userManager = userManager;
             _itemService = itemService;
+            _itemDlInfoService = itemDlInfoService;
             _logger = logger;
         }
 
