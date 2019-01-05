@@ -11,8 +11,9 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using EStalls.Data;
+using EStalls.Data.Interfaces;
 using EStalls.Data.Models;
-using EStalls.Services.Items;
+using EStalls.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -52,6 +53,7 @@ namespace EStalls
 
             // サービス
             services.AddTransient<IItemService, ItemService>();
+            services.AddTransient<IItemDlInfoService, ItemDlInfoService>();
 
             services.AddAuthorization(options =>
             {
