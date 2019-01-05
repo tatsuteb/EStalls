@@ -9,6 +9,7 @@ namespace EStalls.Data.Interfaces
 {
     public interface IItemService
     {
+        Task<Item> GetItemAsync(Guid id);
         Task<Item[]> GetRegisteredItemsAsync();
 
         /// <summary>
@@ -18,5 +19,7 @@ namespace EStalls.Data.Interfaces
         /// <param name="item"></param>
         /// <returns></returns>
         Task AddItemAsync(Item item);
+
+        Task UpdateItemAsync(Item item);
     }
 }
