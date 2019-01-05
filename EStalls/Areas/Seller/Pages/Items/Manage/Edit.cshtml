@@ -1,0 +1,85 @@
+﻿@page "{ItemId}"
+@using EStalls.Data.Models
+@model EStalls.Areas.Seller.Pages.Items.Manage.EditModel
+@{
+    ViewData["Title"] = "作品編集";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<partial name="_StatusMessage" for="StatusMessage" />
+
+<h2>基本情報の更新</h2>
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-route-returnUrl="@Model.ReturnUrl" method="post" enctype="multipart/form-data">
+
+            <div asp-validation-summary="All" class="text-danger"></div>
+
+            <div class="form-group">
+                <label asp-for="InputItem.ThumbnailFile"></label>
+                <input asp-for="InputItem.ThumbnailFile" class="form-control-file" />
+                <span asp-validation-for="InputItem.ThumbnailFile" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="InputItem.PreviewFiles"></label>
+                <input asp-for="InputItem.PreviewFiles" class="form-control-file" />
+                <span asp-validation-for="InputItem.PreviewFiles" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="InputItem.Title"></label>
+                <input asp-for="InputItem.Title" class="form-control" />
+                <span asp-validation-for="InputItem.Title" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="InputItem.Description"></label>
+                <textarea asp-for="InputItem.Description" class="form-control"></textarea>
+                <span asp-validation-for="InputItem.Description" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="InputItem.Price"></label>
+                <input asp-for="InputItem.Price" class="form-control" />
+                <span asp-validation-for="InputItem.Price" class="text-danger"></span>
+            </div>
+
+            <button type="submit" asp-page-handler="EditItem" class="btn btn-primary">更新する</button>
+        </form>
+    </div>
+</div>
+
+<hr />
+
+<h2>新しいバージョンを追加</h2>
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-route-returnUrl="@Model.ReturnUrl" asp-route-itemId="@Model.ItemId" method="post" enctype="multipart/form-data">
+
+            <div asp-validation-summary="All" class="text-danger"></div>
+
+            <div class="form-group">
+                <label asp-for="InputItemDlInfo.DlFiles"></label>
+                <input asp-for="InputItemDlInfo.DlFiles" class="form-control-file" />
+                <span asp-validation-for="InputItemDlInfo.DlFiles" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="InputItemDlInfo.Version"></label>
+                <input asp-for="InputItemDlInfo.Version" class="form-control" />
+                <span asp-validation-for="InputItemDlInfo.Version" class="text-danger"></span>
+            </div>
+
+            <button type="submit" asp-page-handler="AddVersion" class="btn btn-primary">投稿する</button>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
