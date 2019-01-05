@@ -3,21 +3,28 @@
 @{
 }
 
+<partial name="_StatusMessage" for="StatusMessage" />
+
 <div class="row justify-content-center">
     @foreach (var item in Model.RegisteredItems)
     {
         <div class="col-4 col-sm px-2">
-            <figure class="card border-dark">
-                <a href="#">
+            <figure class="card border-dark" style="max-width: 18rem;">
+                <a asp-page="Edit" asp-route-ItemId="@item.Id">
                     <img class="card-img-top"
                          src=@($"/{Constants.DirNames.ItemPreviewFiles}/{item.Id}/{Constants.DirNames.ItemThumbnailFile}/{item.ThumbnailFileName}")
                          alt="@item.Title" />
                 </a>
                 <figcaption class="card-body">
-                    <h5 class="card-title"><a class="text-dark" href="#">@item.Title</a></h5>
-                    <p class="card-text"><a class="text-dark" href="#">@item.Description</a></p>
+                    <h5 class="card-title"><a asp-page="Edit" asp-route-ItemId="@item.Id" class="text-dark">@item.Title</a></h5>
+                    <p class="card-text text-dark">@item.Description</p>
                 </figcaption>
             </figure>
         </div>
     }
 </div>
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

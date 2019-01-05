@@ -18,6 +18,9 @@ namespace EStalls.Areas.Seller.Pages.Items.Manage
             _itemService = itemService;
         }
 
+        [TempData]
+        public string StatusMessage { get; set; }
+
         public Item[] RegisteredItems { get; set; }
 
         public async Task OnGetAsync()
