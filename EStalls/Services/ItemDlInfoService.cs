@@ -17,6 +17,12 @@ namespace EStalls.Services
             _context = context;
         }
 
+        public IEnumerable<ItemDlInfo> GetItemDlInfosByItemId(Guid itemId)
+        {
+            return _context.ItemDlInfo
+                .Where(x => x.ItemId == itemId);
+        }
+
         public async Task AddItemDlInfoAsync(ItemDlInfo itemDlInfo)
         {
             var dateTime = DateTime.Now;

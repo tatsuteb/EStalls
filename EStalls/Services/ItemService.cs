@@ -38,6 +38,12 @@ namespace EStalls.Services
             _logger = logger;
         }
 
+        public async Task<Item> GetItemAsync(Guid id)
+        {
+            return await _context.Item
+                .FirstOrDefaultAsync(x => x.Id == id);
+        }
+
         public async Task<Item[]> GetRegisteredItemsAsync()
         {
             var user = await _userManager.GetUserAsync(this._signInManager.Context.User);
@@ -59,8 +65,54 @@ namespace EStalls.Services
             item.RegistrationTime = dateTime;
             item.UpdateTime = dateTime;
             
-            var addedItem = await _context.Item
+            await _context.Item
                 .AddAsync(item);
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateItemAsync(Item item)
+        {
+            var itemToUpdate = await _context.Item
+                .FirstOrDefaultAsync(x => x.Id == item.Id);
+
+            if (itemToUpdate == null)
+            {
+                return;
+            }
+
+            // 変更があった項目を上書きする
+            if (!string.IsNullOrEmpty(item.Title) &&
+                itemToUpdate.Title != item.Title)
+            {
+                itemToUpdate.Title = item.Title;
+            }
+
+            if (!string.IsNullOrEmpty(item.Description) &&
+                itemToUpdate.Description != item.Description)
+            {
+                itemToUpdate.Description = item.Description;
+            }
+
+            if (itemToUpdate.Price != item.Price)
+            {
+                itemToUpdate.Price = item.Price;
+            }
+
+            if (!string.IsNullOrEmpty(item.PreviewFileNames) &&
+                itemToUpdate.PreviewFileNames != item.PreviewFileNames)
+            {
+                itemToUpdate.PreviewFileNames = item.PreviewFileNames;
+            }
+
+            if (!string.IsNullOrEmpty(item.ThumbnailFileName) &&
+                itemToUpdate.ThumbnailFileName != item.ThumbnailFileName)
+            {
+                itemToUpdate.ThumbnailFileName = item.ThumbnailFileName;
+            }
+
+            itemToUpdate.UpdateTime = DateTime.Now;
+
 
             await _context.SaveChangesAsync();
         }
