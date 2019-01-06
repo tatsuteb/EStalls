@@ -19,7 +19,7 @@ using Microsoft.Extensions.Logging;
 
 namespace EStalls.Areas.Seller.Pages.Items.Manage
 {
-    public class EditModel : PageModel
+    public class EditBaseInfoModel : EditPageModel //PageModel
     {
         private readonly IHostingEnvironment _environment;
         private readonly UserManager<AppUser> _userManager;
@@ -27,7 +27,7 @@ namespace EStalls.Areas.Seller.Pages.Items.Manage
         private readonly IItemDlInfoService _itemDlInfoService;
         private readonly ILogger<RegisterModel> _logger;
 
-        public EditModel(
+        public EditBaseInfoModel(
             IHostingEnvironment environment,
             UserManager<AppUser> userManager,
             IItemService itemService,
@@ -44,8 +44,8 @@ namespace EStalls.Areas.Seller.Pages.Items.Manage
         [TempData]
         public string StatusMessage { get; set; }
 
-        [BindProperty(SupportsGet = true)]
-        public Guid ItemId { get; set; }
+        // [BindProperty(SupportsGet = true)]
+        // public Guid ItemId { get; set; }
 
         [BindProperty]
         public InputItemModel InputItem { get; set; }

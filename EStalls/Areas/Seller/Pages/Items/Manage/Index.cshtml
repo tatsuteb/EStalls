@@ -1,7 +1,10 @@
 ﻿@page
 @model EStalls.Areas.Seller.Pages.Items.Manage.IndexModel
 @{
+    ViewData["Title"] = "作品一覧";
 }
+
+<h1>@ViewData["Title"]</h1>
 
 <partial name="_StatusMessage" for="StatusMessage" />
 
@@ -10,13 +13,13 @@
     {
         <div class="col-4 col-sm px-2">
             <figure class="card border-dark" style="max-width: 18rem;">
-                <a asp-page="Edit" asp-route-ItemId="@item.Id">
+                <a asp-page="EditBaseInfo" asp-route-ItemId="@item.Id">
                     <img class="card-img-top"
                          src=@($"/{Constants.DirNames.ItemPreviewFiles}/{item.Id}/{Constants.DirNames.ItemThumbnailFile}/{item.ThumbnailFileName}")
                          alt="@item.Title" />
                 </a>
                 <figcaption class="card-body">
-                    <h5 class="card-title"><a asp-page="Edit" asp-route-ItemId="@item.Id" class="text-dark">@item.Title</a></h5>
+                    <h5 class="card-title"><a asp-page="EditBaseInfo" asp-route-ItemId="@item.Id" class="text-dark">@item.Title</a></h5>
                     <p class="card-text text-dark">@item.Description</p>
                 </figcaption>
             </figure>

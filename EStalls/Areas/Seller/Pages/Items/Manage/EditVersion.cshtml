@@ -1,0 +1,34 @@
+﻿@page "{ItemId}"
+@model EStalls.Areas.Seller.Pages.Items.Manage.EditVersionModel
+@{
+    Layout = "_Layout";
+}
+
+<partial name="_StatusMessage" for="StatusMessage" />
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-route-returnUrl="@Model.ReturnUrl" asp-route-itemId="@Model.ItemId" method="post" enctype="multipart/form-data">
+
+            <div asp-validation-summary="All" class="text-danger"></div>
+
+            <div class="form-group">
+                <label asp-for="InputItemDlInfo.DlFiles"></label>
+                <input asp-for="InputItemDlInfo.DlFiles" class="form-control-file" />
+                <span asp-validation-for="InputItemDlInfo.DlFiles" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="InputItemDlInfo.Version"></label>
+                <input asp-for="InputItemDlInfo.Version" class="form-control" />
+                <span asp-validation-for="InputItemDlInfo.Version" class="text-danger"></span>
+            </div>
+
+            <button type="submit" asp-page-handler="AddVersion" class="btn btn-primary">投稿する</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
