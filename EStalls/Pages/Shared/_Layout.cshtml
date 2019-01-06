@@ -37,9 +37,11 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <partial name="_LoginPartial" />
-                    <form asp-page="/Search/Items" method="get">
-                        <input type="text" name="Keyword" value="@searchKeyword" />
-                        <button type="submit" asp-page="/Search/Items">検索</button>
+                    <form class="input-group col-3" asp-page="/Search/Items" method="get">
+                        <input type="text" class="form-control" name="Keyword" value="@searchKeyword" />
+                        <div class="input-group-append">
+                            <button type="submit" class="btn btn-outline-secondary" asp-page="/Search/Items">検索</button>
+                        </div>
                     </form>
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
