@@ -50,9 +50,6 @@ namespace EStalls.Areas.Seller.Pages.Items.Manage
         [BindProperty]
         public InputItemModel InputItem { get; set; }
 
-        [BindProperty]
-        public InputItemDlInfoModel InputItemDlInfo { get; set; }
-
         public string ReturnUrl { get; set; }
 
         public class InputItemModel
@@ -76,17 +73,6 @@ namespace EStalls.Areas.Seller.Pages.Items.Manage
             public IFormFile ThumbnailFile { get; set; }
         }
 
-        public class InputItemDlInfoModel
-        {
-            [Required]
-            [StringLength(50, ErrorMessage = "{0}は{1}文字以下です")]
-            [Display(Name = "バージョン")]
-            public string Version { get; set; }
-
-            [Required]
-            [Display(Name = "販売データファイル")]
-            public List<IFormFile> DlFiles { get; set; }
-        }
 
         private class CheckAccessResult
         {
@@ -137,14 +123,9 @@ namespace EStalls.Areas.Seller.Pages.Items.Manage
             {
                 return result.ReturnPage;
             }
-            // var item = await _itemService.GetItemAsync(ItemId);
-            // var userId = _userManager.GetUserId(User);
+
             var item = result.ValidItem;
             var userId = result.ValidUid;
-
-            // ダウンロード情報追加用のキーはモデルチェックから外す
-            ModelState.Remove(nameof(InputItemDlInfo.DlFiles));
-            ModelState.Remove(nameof(InputItemDlInfo.Version));
 
             if (!ModelState.IsValid)
             {
@@ -229,63 +210,6 @@ namespace EStalls.Areas.Seller.Pages.Items.Manage
             return RedirectToPage();
         }
 
-        public async Task<IActionResult> OnPostAddVersionAsync(string returnUrl = null)
-        {
-            returnUrl = returnUrl ?? Url.Content("~/");
-
-            var result = await CheckAccessAsync();
-            if (!result.IsValid)
-            {
-                return result.ReturnPage;
-            }
-
-            if (!ModelState.IsValid)
-            {
-                RedirectToPage();
-            }
-
-            try
-            {
-                // 保存用のファイル名を作成
-                var newDlFileNames = FileUtil.GetHtmlEncodedFileNames(InputItemDlInfo.DlFiles.ToArray());
-
-                #region DBへ作品情報を保存
-
-                // ダウンロード情報
-                var newItemDlInfo = new ItemDlInfo()
-                {
-                    ItemId = ItemId,
-                    Version = InputItemDlInfo.Version,
-                    DlFileNames = string.Join(",", newDlFileNames),
-                };
-                await _itemDlInfoService.AddItemDlInfoAsync(newItemDlInfo);
-
-                #endregion
-
-
-                #region ファイルのアップロード
-
-                // ダウンロード用ファイル
-                var dlDirPath = Path.Combine(new[]
-                {
-                    _environment.WebRootPath,
-                    Constants.DirNames.ItemDlFiles,
-                    newItemDlInfo.Id.ToString()
-                });
-                await FileUtil.SaveFilesAsync(InputItemDlInfo.DlFiles.ToArray(), dlDirPath, newDlFileNames);
-
-                #endregion
-            }
-            catch (Exception e)
-            {
-                _logger.LogWarning(e.Message);
-
-                return LocalRedirect(returnUrl);
-            }
-
-            StatusMessage = "新しいバージョンが追加されました";
-            return RedirectToPage();
-        }
 
         private async Task<CheckAccessResult> CheckAccessAsync()
         {
