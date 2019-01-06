@@ -13,15 +13,15 @@
             <div asp-validation-summary="All" class="text-danger"></div>
 
             <div class="form-group">
-                <label asp-for="InputItemDlInfo.DlFiles"></label>
-                <input asp-for="InputItemDlInfo.DlFiles" class="form-control-file" />
-                <span asp-validation-for="InputItemDlInfo.DlFiles" class="text-danger"></span>
+                <label asp-for="Input.DlFiles"></label>
+                <input asp-for="Input.DlFiles" class="form-control-file" />
+                <span asp-validation-for="Input.DlFiles" class="text-danger"></span>
             </div>
 
             <div class="form-group">
-                <label asp-for="InputItemDlInfo.Version"></label>
-                <input asp-for="InputItemDlInfo.Version" class="form-control" />
-                <span asp-validation-for="InputItemDlInfo.Version" class="text-danger"></span>
+                <label asp-for="Input.Version"></label>
+                <input asp-for="Input.Version" class="form-control" />
+                <span asp-validation-for="Input.Version" class="text-danger"></span>
             </div>
 
             <button type="submit" asp-page-handler="AddVersion" class="btn btn-primary">投稿する</button>

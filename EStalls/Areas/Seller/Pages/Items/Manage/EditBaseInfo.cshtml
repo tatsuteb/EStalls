@@ -14,33 +14,33 @@
             <div asp-validation-summary="All" class="text-danger"></div>
 
             <div class="form-group">
-                <label asp-for="InputItem.ThumbnailFile"></label>
-                <input asp-for="InputItem.ThumbnailFile" class="form-control-file" />
-                <span asp-validation-for="InputItem.ThumbnailFile" class="text-danger"></span>
+                <label asp-for="Input.ThumbnailFile"></label>
+                <input asp-for="Input.ThumbnailFile" class="form-control-file" />
+                <span asp-validation-for="Input.ThumbnailFile" class="text-danger"></span>
             </div>
 
             <div class="form-group">
-                <label asp-for="InputItem.PreviewFiles"></label>
-                <input asp-for="InputItem.PreviewFiles" class="form-control-file" />
-                <span asp-validation-for="InputItem.PreviewFiles" class="text-danger"></span>
+                <label asp-for="Input.PreviewFiles"></label>
+                <input asp-for="Input.PreviewFiles" class="form-control-file" />
+                <span asp-validation-for="Input.PreviewFiles" class="text-danger"></span>
             </div>
 
             <div class="form-group">
-                <label asp-for="InputItem.Title"></label>
-                <input asp-for="InputItem.Title" class="form-control" />
-                <span asp-validation-for="InputItem.Title" class="text-danger"></span>
+                <label asp-for="Input.Title"></label>
+                <input asp-for="Input.Title" class="form-control" />
+                <span asp-validation-for="Input.Title" class="text-danger"></span>
             </div>
 
             <div class="form-group">
-                <label asp-for="InputItem.Description"></label>
-                <textarea asp-for="InputItem.Description" class="form-control"></textarea>
-                <span asp-validation-for="InputItem.Description" class="text-danger"></span>
+                <label asp-for="Input.Description"></label>
+                <textarea asp-for="Input.Description" class="form-control"></textarea>
+                <span asp-validation-for="Input.Description" class="text-danger"></span>
             </div>
 
             <div class="form-group">
-                <label asp-for="InputItem.Price"></label>
-                <input asp-for="InputItem.Price" class="form-control" />
-                <span asp-validation-for="InputItem.Price" class="text-danger"></span>
+                <label asp-for="Input.Price"></label>
+                <input asp-for="Input.Price" class="form-control" />
+                <span asp-validation-for="Input.Price" class="text-danger"></span>
             </div>
 
             <button type="submit" asp-page-handler="EditItem" class="btn btn-primary">更新する</button>

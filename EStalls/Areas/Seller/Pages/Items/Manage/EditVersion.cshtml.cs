@@ -41,15 +41,12 @@ namespace EStalls.Areas.Seller.Pages.Items.Manage
         [TempData]
         public string StatusMessage { get; set; }
 
-        // [BindProperty(SupportsGet = true)]
-        // public Guid ItemId { get; set; }
-
         [BindProperty]
-        public InputItemDlInfoModel InputItemDlInfo { get; set; }
+        public InputModel Input { get; set; }
 
         public string ReturnUrl { get; set; }
 
-        public class InputItemDlInfoModel
+        public class InputModel
         {
             [Required]
             [StringLength(50, ErrorMessage = "{0}は{1}文字以下です")]
@@ -111,7 +108,7 @@ namespace EStalls.Areas.Seller.Pages.Items.Manage
             try
             {
                 // 保存用のファイル名を作成
-                var newDlFileNames = FileUtil.GetHtmlEncodedFileNames(InputItemDlInfo.DlFiles.ToArray());
+                var newDlFileNames = FileUtil.GetHtmlEncodedFileNames(Input.DlFiles.ToArray());
 
                 #region DBへ作品情報を保存
 
@@ -119,7 +116,7 @@ namespace EStalls.Areas.Seller.Pages.Items.Manage
                 var newItemDlInfo = new ItemDlInfo()
                 {
                     ItemId = ItemId,
-                    Version = InputItemDlInfo.Version,
+                    Version = Input.Version,
                     DlFileNames = string.Join(",", newDlFileNames),
                 };
                 await _itemDlInfoService.AddItemDlInfoAsync(newItemDlInfo);
@@ -136,7 +133,7 @@ namespace EStalls.Areas.Seller.Pages.Items.Manage
                     Constants.DirNames.ItemDlFiles,
                     newItemDlInfo.Id.ToString()
                 });
-                await FileUtil.SaveFilesAsync(InputItemDlInfo.DlFiles.ToArray(), dlDirPath, newDlFileNames);
+                await FileUtil.SaveFilesAsync(Input.DlFiles.ToArray(), dlDirPath, newDlFileNames);
 
                 #endregion
             }

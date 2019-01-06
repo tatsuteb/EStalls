@@ -44,15 +44,12 @@ namespace EStalls.Areas.Seller.Pages.Items.Manage
         [TempData]
         public string StatusMessage { get; set; }
 
-        // [BindProperty(SupportsGet = true)]
-        // public Guid ItemId { get; set; }
-
         [BindProperty]
-        public InputItemModel InputItem { get; set; }
+        public InputModel Input { get; set; }
 
         public string ReturnUrl { get; set; }
 
-        public class InputItemModel
+        public class InputModel
         {
             [StringLength(100, ErrorMessage = "{0}は{1}文字以下です")]
             [Display(Name = "タイトル")]
@@ -104,7 +101,7 @@ namespace EStalls.Areas.Seller.Pages.Items.Manage
 
             var item = result.ValidItem;
             
-            InputItem = new InputItemModel()
+            Input = new InputModel()
             {
                 Title = item?.Title,
                 Description = item?.Description,
@@ -139,8 +136,8 @@ namespace EStalls.Areas.Seller.Pages.Items.Manage
                 var thumbnailFileName= item.ThumbnailFileName;
 
                 // 保存用のファイル名を作成
-                var newPreviewFileNames = FileUtil.GetHtmlEncodedFileNames(InputItem.PreviewFiles?.ToArray());
-                var newThumbFileName = FileUtil.GetHtmlEncodedFileName(InputItem.ThumbnailFile);
+                var newPreviewFileNames = FileUtil.GetHtmlEncodedFileNames(Input.PreviewFiles?.ToArray());
+                var newThumbFileName = FileUtil.GetHtmlEncodedFileName(Input.ThumbnailFile);
 
                 #region DBへ作品情報を保存
 
@@ -149,9 +146,9 @@ namespace EStalls.Areas.Seller.Pages.Items.Manage
                 {
                     Id = ItemId,
                     Uid = userId,
-                    Title = InputItem.Title,
-                    Description = InputItem.Description,
-                    Price = InputItem.Price,
+                    Title = Input.Title,
+                    Description = Input.Description,
+                    Price = Input.Price,
                     PreviewFileNames = string.Join(",", newPreviewFileNames),
                     ThumbnailFileName = newThumbFileName
                 };
@@ -171,8 +168,8 @@ namespace EStalls.Areas.Seller.Pages.Items.Manage
                 });
 
                 // プレビューファイル
-                if (InputItem.PreviewFiles != null &&
-                    InputItem.PreviewFiles.Any())
+                if (Input.PreviewFiles != null &&
+                    Input.PreviewFiles.Any())
                 {
                     // 古いプレビューファイルを削除
                     foreach (var fileName in previewFileNames)
@@ -180,11 +177,11 @@ namespace EStalls.Areas.Seller.Pages.Items.Manage
                         FileUtil.DeleteFile(dirPath, fileName);
                     }
                     // 新しいプレビューファイルを保存
-                    await FileUtil.SaveFilesAsync(InputItem.PreviewFiles?.ToArray(), dirPath, newPreviewFileNames);
+                    await FileUtil.SaveFilesAsync(Input.PreviewFiles?.ToArray(), dirPath, newPreviewFileNames);
                 }
 
                 // サムネイルファイル
-                if (InputItem.ThumbnailFile != null)
+                if (Input.ThumbnailFile != null)
                 {
                     var thumbDirPath = Path.Combine(new[]
                     {
@@ -194,7 +191,7 @@ namespace EStalls.Areas.Seller.Pages.Items.Manage
                     // 古いサムネールを削除
                     FileUtil.DeleteFile(thumbDirPath, thumbnailFileName);
                     // 新しいサムネールを保存
-                    await FileUtil.SaveFileAsync(InputItem.ThumbnailFile, thumbDirPath, newThumbFileName);
+                    await FileUtil.SaveFileAsync(Input.ThumbnailFile, thumbDirPath, newThumbFileName);
                 }
 
                 #endregion
