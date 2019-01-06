@@ -16,7 +16,7 @@ using Microsoft.Extensions.Logging;
 
 namespace EStalls.Areas.Seller.Pages.Items.Manage
 {
-    public class EditVersionModel : EditPageModel // PageModel
+    public class EditVersionModel : EditPageModel
     {
         private readonly IHostingEnvironment _environment;
         private readonly IItemDlInfoService _itemDlInfoService;

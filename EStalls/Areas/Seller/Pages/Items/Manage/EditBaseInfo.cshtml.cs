@@ -19,7 +19,7 @@ using Microsoft.Extensions.Logging;
 
 namespace EStalls.Areas.Seller.Pages.Items.Manage
 {
-    public class EditBaseInfoModel : EditPageModel //PageModel
+    public class EditBaseInfoModel : EditPageModel
     {
         private readonly IHostingEnvironment _environment;
         private readonly IItemDlInfoService _itemDlInfoService;
@@ -127,7 +127,7 @@ namespace EStalls.Areas.Seller.Pages.Items.Manage
                     PreviewFileNames = string.Join(",", newPreviewFileNames),
                     ThumbnailFileName = newThumbFileName
                 };
-                await _itemService.UpdateItemAsync(itemToUpdate);
+                await _itemService.UpdateAsync(itemToUpdate);
 
                 #endregion
 

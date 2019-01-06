@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using EStalls.Data.Interfaces;
 using EStalls.Data.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -11,10 +12,14 @@ namespace EStalls.Areas.Seller.Pages.Items.Manage
 {
     public class IndexModel : PageModel
     {
+        private readonly UserManager<AppUser> _userManager;
         private readonly IItemService _itemService;
 
-        public IndexModel(IItemService itemService)
+        public IndexModel(
+            UserManager<AppUser> userManager,
+            IItemService itemService)
         {
+            _userManager = userManager;
             _itemService = itemService;
         }
 
@@ -23,9 +28,11 @@ namespace EStalls.Areas.Seller.Pages.Items.Manage
 
         public Item[] RegisteredItems { get; set; }
 
-        public async Task OnGetAsync()
+        public void OnGet()
         {
-            RegisteredItems = await _itemService.GetRegisteredItemsAsync();
+            var uid = _userManager.GetUserId(User);
+            RegisteredItems = _itemService.GetByUid(uid)
+                .ToArray();
         }
     }
 }

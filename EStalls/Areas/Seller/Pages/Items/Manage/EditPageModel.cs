@@ -48,7 +48,7 @@ namespace EStalls.Areas.Seller.Pages.Items.Manage
         protected async Task<CheckAccessResult> CheckAccessAsync()
         {
             // 作品存在チェック
-            var item = await _itemService.GetItemAsync(ItemId);
+            var item = await _itemService.GetAsync(ItemId);
             if (item == null)
             {
                 StatusMessage = "作品が見つかりません";

@@ -9,8 +9,9 @@ namespace EStalls.Data.Interfaces
 {
     public interface IItemService
     {
-        Task<Item> GetItemAsync(Guid id);
-        Task<Item[]> GetRegisteredItemsAsync();
+        Task<Item> GetAsync(Guid id);
+        IEnumerable<Item> GetAll();
+        IEnumerable<Item> GetByUid(string uid);
 
         /// <summary>
         /// 作品の基本情報をDBに保存する
@@ -18,8 +19,8 @@ namespace EStalls.Data.Interfaces
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        Task AddItemAsync(Item item);
+        Task AddAsync(Item item);
 
-        Task UpdateItemAsync(Item item);
+        Task UpdateAsync(Item item);
     }
 }

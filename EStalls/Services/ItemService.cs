@@ -38,26 +38,26 @@ namespace EStalls.Services
             _logger = logger;
         }
 
-        public async Task<Item> GetItemAsync(Guid id)
+        public async Task<Item> GetAsync(Guid id)
         {
             return await _context.Item
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public async Task<Item[]> GetRegisteredItemsAsync()
+        public IEnumerable<Item> GetAll()
         {
-            var user = await _userManager.GetUserAsync(this._signInManager.Context.User);
-            var uid = user.Id;
+            return _context.Item;
+        }
 
-            var items = await _context.Item
-                .AsNoTracking()
-                .Where(x => x.Uid == uid)
-                .ToArrayAsync();
+        public IEnumerable<Item> GetByUid(string uid)
+        {
+            var items = _context.Item
+                .Where(x => x.Uid == uid);
 
             return items;
         }
 
-        public async Task AddItemAsync(Item item)
+        public async Task AddAsync(Item item)
         {
             var dateTime = DateTime.Now;
 
@@ -71,7 +71,7 @@ namespace EStalls.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task UpdateItemAsync(Item item)
+        public async Task UpdateAsync(Item item)
         {
             var itemToUpdate = await _context.Item
                 .FirstOrDefaultAsync(x => x.Id == item.Id);

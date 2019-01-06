@@ -119,7 +119,7 @@ namespace EStalls.Areas.Seller.Pages.Items
                     PreviewFileNames = string.Join(",", previewFileNames),
                     ThumbnailFileName = thumbFileName
                 };
-                await _itemService.AddItemAsync(newItem);
+                await _itemService.AddAsync(newItem);
 
                 // ダウンロード情報
                 var newItemDlInfo = new ItemDlInfo()
