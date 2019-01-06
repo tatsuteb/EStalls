@@ -1,4 +1,13 @@
-﻿<!DOCTYPE html>
+﻿@{
+    var searchKeyword = "";
+    if (Model.GetType() == typeof(Search.ItemsModel) ||
+        Model.GetType() == typeof(Search.UsersModel))
+    {
+        searchKeyword = ((Search.SearchPageModel) Model).Keyword;
+    }
+}
+
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -28,9 +37,16 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <partial name="_LoginPartial" />
+                    <form asp-page="/Search/Items" method="get">
+                        <input type="text" name="Keyword" value="@searchKeyword" />
+                        <button type="submit" asp-page="/Search/Items">検索</button>
+                    </form>
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-page="/Search/Items">検索（仮）</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>

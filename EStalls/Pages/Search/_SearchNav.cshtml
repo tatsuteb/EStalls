@@ -1,0 +1,8 @@
+﻿@model SearchPageModel
+@{
+}
+
+<ul class="nav nav-tabs justify-content-start">
+    <li class="nav-item"><a class="nav-link @SearchNavPages.ItemsNavClass(ViewContext)" asp-page="./Items" asp-route-Keyword="@Model.Keyword">作品検索</a></li>
+    <li class="nav-item"><a class="nav-link @SearchNavPages.UsersNavClass(ViewContext)" asp-page="./Users" asp-route-Keyword="@Model.Keyword">ユーザー検索</a></li>
+</ul>
