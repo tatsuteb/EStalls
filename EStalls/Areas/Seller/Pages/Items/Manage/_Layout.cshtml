@@ -1,0 +1,18 @@
+﻿@model EditPageModel
+@{
+    Layout = "/Pages/Shared/_Layout.cshtml";
+    ViewData["Title"] = "作品編集";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div>
+    <partial name="_EditNav" for="ItemId" />
+</div>
+<div>
+    @RenderBody()
+</div>
+
+@section Scripts {
+    @RenderSection("Scripts", required: false)
+}

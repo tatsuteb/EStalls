@@ -1,0 +1,8 @@
+﻿@* @model System.Guid *@
+@using EStalls.Areas.Seller.Pages.Items.Manage
+@{
+}
+<ul class="nav nav-tabs justify-content-start">
+    <li class="nav-item"><a class="nav-link @EditNavPages.EditBaseInfoNavClass(ViewContext)" asp-page="./EditBaseInfo" asp-route-ItemId="@Model">基本情報</a></li>
+    <li class="nav-item"><a class="nav-link @EditNavPages.EditVersionNavClass(ViewContext)" asp-page="./EditVersion"  asp-route-ItemId="@Model">バージョン管理</a></li>
+</ul>
