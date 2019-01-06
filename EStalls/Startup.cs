@@ -52,6 +52,7 @@ namespace EStalls
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             // サービス
+            services.AddTransient<IAppUserService, AppUserService>();
             services.AddTransient<IItemService, ItemService>();
             services.AddTransient<IItemDlInfoService, ItemDlInfoService>();
 
