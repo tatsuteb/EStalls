@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using EStalls.Data.Models;
+using EStalls.Utilities;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -16,17 +19,20 @@ namespace EStalls.Areas.Identity.Pages.Account
     [AllowAnonymous]
     public class RegisterModel : PageModel
     {
+        private readonly IHostingEnvironment _environment;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly UserManager<AppUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
 
         public RegisterModel(
+            IHostingEnvironment environment,
             UserManager<AppUser> userManager,
             SignInManager<AppUser> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender)
         {
+            _environment = environment;
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
@@ -93,6 +99,12 @@ namespace EStalls.Areas.Identity.Pages.Account
                         $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
                     await _signInManager.SignInAsync(user, isPersistent: false);
+
+                    // ユーザーフォルダを作成して、ダミーの画像をコピーする
+                    var destDir = Path.Combine(_environment.WebRootPath, Constants.DirNames.UserFiles, user.Id);
+                    var fileName = $"{Constants.FileNames.ProfileFileName}.png";
+                    FileUtil.CopyFile(_environment.WebRootPath, fileName, destDir, fileName);
+
                     return LocalRedirect(returnUrl);
                 }
                 foreach (var error in result.Errors)

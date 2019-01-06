@@ -11,6 +11,46 @@ namespace EStalls.Utilities
 {
     public static class FileUtil
     {
+        public static bool CopyFile(
+            string sourceDirPath, string sourceFileName, 
+            string destDirPath, string destFileName)
+        {
+            if (string.IsNullOrWhiteSpace(sourceDirPath) ||
+                string.IsNullOrWhiteSpace(sourceFileName) ||
+                string.IsNullOrWhiteSpace(destDirPath) ||
+                string.IsNullOrWhiteSpace(destFileName))
+            {
+                return false;
+            }
+
+            var sourceFilePath = Path.Combine(sourceDirPath, sourceFileName);
+
+            if (!File.Exists(sourceFilePath))
+            {
+                return false;
+            }
+
+            if (!Directory.Exists(destDirPath))
+            {
+                Directory.CreateDirectory(destDirPath);
+            }
+
+            var destFilePath = Path.Combine(destDirPath, destFileName);
+
+            try
+            {
+                File.Copy(sourceFilePath, destFilePath, true);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return false;
+            }
+
+            return true;
+        }
+
+
         public static async Task<bool> SaveFileAsync(IFormFile file, string dirPath, string fileName = "")
         {
             if (fileName == "")

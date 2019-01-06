@@ -18,8 +18,15 @@ namespace EStalls.Constants
 
     public static class DirNames
     {
+        public static string UserFiles => "users";
+
         public static string ItemPreviewFiles => "items";
         public static string ItemThumbnailFile => "thumbnail";
         public static string ItemDlFiles => "files";
+    }
+
+    public static class FileNames
+    {
+        public static string ProfileFileName => "profile";
     }
 }
