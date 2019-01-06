@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Linq;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using EStalls.Data.Models;
+using EStalls.Utilities;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -14,15 +18,18 @@ namespace EStalls.Areas.Identity.Pages.Account.Manage
 {
     public partial class IndexModel : PageModel
     {
+        private readonly IHostingEnvironment _environment;
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly IEmailSender _emailSender;
 
         public IndexModel(
+            IHostingEnvironment environment,
             UserManager<AppUser> userManager,
             SignInManager<AppUser> signInManager,
             IEmailSender emailSender)
         {
+            _environment = environment;
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
@@ -51,6 +58,9 @@ namespace EStalls.Areas.Identity.Pages.Account.Manage
             // [Phone]
             // [Display(Name = "Phone number")]
             // public string PhoneNumber { get; set; }
+
+            [Display(Name = "プロフィール画像")]
+            public IFormFile ProfileFile { get; set; }
         }
 
         public async Task<IActionResult> OnGetAsync()
@@ -126,6 +136,17 @@ namespace EStalls.Areas.Identity.Pages.Account.Manage
             //         throw new InvalidOperationException($"Unexpected error occurred setting phone number for user with ID '{userId}'.");
             //     }
             // }
+
+            // プロフィール画像の更新
+            if (Input.ProfileFile != null)
+            {
+                var dirPath = Path.Combine(
+                    _environment.WebRootPath,
+                    Constants.DirNames.UserFiles,
+                    user.Id);
+
+                await FileUtil.SaveFileAsync(Input.ProfileFile, dirPath, $"{Constants.FileNames.ProfileFileName}.png");
+            }
 
             await _signInManager.RefreshSignInAsync(user);
             StatusMessage = "Your profile has been updated";

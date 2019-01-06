@@ -7,26 +7,18 @@
 <div class="row justify-content-start">
     @foreach (var appUser in Model.AppUsers)
     {
-@*         <div class="col-4 col-sm px-2"> *@
-@*             <figure class="card border-dark" style="max-width: 18rem;"> *@
-@*                 <a asp-page="/User" asp-route-ItemId="@appUser.Id"> *@
-@*                     <img class="card-img-top" *@
-@*                          src=@($"/{Constants.DirNames.UserProfileFile}/{appUser.Id}/{appUser.UserProfileFile}") *@
-@*                          alt="@appUser.DisplayName" /> *@
-@*                 </a> *@
-@*                 <figcaption class="card-body"> *@
-@*                     <h5 class="card-title"><a asp-page="/Item" asp-route-ItemId="@appUser.Id" class="text-dark">@appUser.DisplayName</a></h5> *@
-@*                     <p class="card-text text-dark">@appUser.Description</p> *@
-@*                 </figcaption> *@
-@*             </figure> *@
-@*         </div> *@
-
-        <div class="col-4 col-sm px-2">
-            <div class="card border-dark" style="max-width: 18rem;">
-                <div class="card-body">
-                    <h5 class="card-title"><a asp-page="/Item" asp-route-ItemId="@appUser.Id" class="text-dark">@appUser.DisplayName</a></h5>
-                </div>
-            </div>
-        </div>
+         <div class="col-4 col-sm px-2">
+             <figure class="card border-dark" style="max-width: 18rem;">
+                 <a asp-page="/User" asp-route-ItemId="@appUser.Id">
+                     <img class="card-img-top"
+                          src=@($"/{Constants.DirNames.UserFiles}/{appUser.Id}/{Constants.FileNames.ProfileFileName}.png")
+                          alt="@appUser.DisplayName" />
+                 </a>
+                 <figcaption class="card-body">
+                     <h5 class="card-title"><a asp-page="/User" asp-route-ItemId="@appUser.Id" class="text-dark">@appUser.DisplayName</a></h5>
+                     <p class="card-text text-dark">@appUser.DisplayName</p>
+                 </figcaption>
+             </figure>
+         </div>
     }
 </div>
