@@ -8,7 +8,7 @@
     {
         <div class="col-4 col-sm px-2">
             <figure class="card border-dark" style="max-width: 18rem;">
-                <a asp-page="/Item" asp-route-ItemId="@item.Id">
+                <a asp-page="/Item/Index" asp-route-ItemId="@item.Id">
                     <img class="card-img-top"
                          src=@($"/{Constants.DirNames.ItemPreviewFiles}/{item.Id}/{Constants.DirNames.ItemThumbnailFile}/{item.ThumbnailFileName}")
                          alt="@item.Title" />

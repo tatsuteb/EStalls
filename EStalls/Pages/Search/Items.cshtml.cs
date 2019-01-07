@@ -19,7 +19,7 @@ namespace EStalls.Pages.Search
             _itemService = itemService;
         }
 
-        public IEnumerable<Item> Items { get; set; }
+        public IEnumerable<Data.Models.Item> Items { get; set; }
 
         public void OnGet()
         {
