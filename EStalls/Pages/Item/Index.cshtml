@@ -1,4 +1,46 @@
 ﻿@page "/Item/{ItemId}"
 @model EStalls.Pages.Item.IndexModel
 @{
+    var previewFileNames = Model.Item.PreviewFileNames.Split(",");
+    var previewPaths = previewFileNames
+        .Select(fileName => $"/{Constants.DirNames.ItemPreviewFiles}/{Model.ItemId}/{fileName}")
+        .ToList();
 }
+
+<h1>@Model.Item.Title</h1>
+
+<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+    <ol class="carousel-indicators">
+        @for (var i = 0; i < previewPaths.Count; i++)
+        {
+            <li data-target="#carouselExampleIndicators" data-slide-to="@i" class="@(i == 0 ? "active" : "")"></li>
+        }
+    </ol>
+    <div class="carousel-inner">
+        @for (var i = 0; i < previewPaths.Count; i++)
+        {
+            var path = previewPaths[i];
+
+            <div class="carousel-item @(i == 0 ? "active" : "")">
+                <img src="@path" class="d-block w-100" alt="@System.IO.Path.GetFileName(path)" />
+                @* <figcaption>@System.IO.Path.GetFileName(path)</figcaption> *@
+            </div>
+        }
+    </div>
+    <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+    </a>
+    <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+    </a>
+</div>
+
+<p>
+    @Model.Item.Description
+</p>
+
+<form method="post">
+    <button type="submit" class="btn btn-primary" asp-page-handler="AddCart" asp-route-ItemId="@Model.ItemId">カートに入れる</button>
+</form>
