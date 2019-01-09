@@ -4,14 +4,16 @@ using EStalls.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EStalls.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190109151417_AddOrderItem")]
+    partial class AddOrderItem
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -190,21 +192,6 @@ namespace EStalls.Data.Migrations
                     b.HasAlternateKey("ItemId", "OrderId");
 
                     b.ToTable("OrderItem");
-                });
-
-            modelBuilder.Entity("EStalls.Data.Models.PurchasedItem", b =>
-                {
-                    b.Property<Guid>("UserId");
-
-                    b.Property<Guid>("ItemId");
-
-                    b.Property<DateTime>("PurchaseDate");
-
-                    b.HasKey("UserId", "ItemId");
-
-                    b.HasAlternateKey("ItemId", "UserId");
-
-                    b.ToTable("PurchasedItem");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

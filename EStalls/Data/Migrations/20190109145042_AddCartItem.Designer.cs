@@ -4,14 +4,16 @@ using EStalls.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EStalls.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190109145042_AddCartItem")]
+    partial class AddCartItem
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -150,61 +152,6 @@ namespace EStalls.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ItemDlInfo");
-                });
-
-            modelBuilder.Entity("EStalls.Data.Models.Order", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<DateTime>("OrderDate");
-
-                    b.Property<decimal>("TotalAmount")
-                        .HasColumnType("decimal(18, 2)");
-
-                    b.Property<Guid>("Uid");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Order");
-                });
-
-            modelBuilder.Entity("EStalls.Data.Models.OrderItem", b =>
-                {
-                    b.Property<Guid>("OrderId");
-
-                    b.Property<Guid>("ItemId");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18, 2)");
-
-                    b.Property<string>("SellerDisplayName")
-                        .IsRequired();
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(100);
-
-                    b.HasKey("OrderId", "ItemId");
-
-                    b.HasAlternateKey("ItemId", "OrderId");
-
-                    b.ToTable("OrderItem");
-                });
-
-            modelBuilder.Entity("EStalls.Data.Models.PurchasedItem", b =>
-                {
-                    b.Property<Guid>("UserId");
-
-                    b.Property<Guid>("ItemId");
-
-                    b.Property<DateTime>("PurchaseDate");
-
-                    b.HasKey("UserId", "ItemId");
-
-                    b.HasAlternateKey("ItemId", "UserId");
-
-                    b.ToTable("PurchasedItem");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
