@@ -29,4 +29,9 @@ namespace EStalls.Constants
     {
         public static string ProfileFileName => "profile";
     }
+
+    public static class SessionKeys
+    {
+        public static string CartId => "_CartId";
+    }
 }
