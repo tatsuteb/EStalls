@@ -55,11 +55,21 @@ namespace EStalls
             services.AddTransient<IAppUserService, AppUserService>();
             services.AddTransient<IItemService, ItemService>();
             services.AddTransient<IItemDlInfoService, ItemDlInfoService>();
+            services.AddTransient<ICartService, CartService>();
+            services.AddTransient<ICartItemService, CartItemService>();
 
             services.AddAuthorization(options =>
             {
                 // アクセス制限用ポリシーを追加
                 options.AddPolicy(Constants.PolicyTypes.RequireSellerRole, policy => policy.RequireRole(Constants.RoleTypes.Seller));
+            });
+
+            // セッションを使用する準備
+            services.AddDistributedMemoryCache();
+            services.AddSession(options =>
+            {
+                options.Cookie.Name = ".EStalls.Session";
+                options.Cookie.HttpOnly = true;
             });
 
             services.AddMvc()
@@ -90,8 +100,8 @@ namespace EStalls
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
-
             app.UseAuthentication();
+            app.UseSession();
 
             app.UseMvc();
         }
