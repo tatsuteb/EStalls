@@ -10,7 +10,7 @@ namespace EStalls.Services
 {
     public class AppUserService : IAppUserService
     {
-        private ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;
 
         public AppUserService(ApplicationDbContext context)
         {
