@@ -45,5 +45,19 @@ namespace EStalls.Services
 
             await _context.SaveChangesAsync();
         }
+
+        public async Task Delete(Guid cartId, Guid itemId)
+        {
+            var item = _context.CartItem
+                .SingleOrDefault(x => x.CartId == cartId && x.ItemId == itemId);
+
+            if (item == null)
+                return;
+
+            _context.CartItem
+                .Remove(item);
+
+            await _context.SaveChangesAsync();
+        }
     }
 }

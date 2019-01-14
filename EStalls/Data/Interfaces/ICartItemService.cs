@@ -12,5 +12,6 @@ namespace EStalls.Data.Interfaces
         Task AddAsync(CartItem cartItem);
         Task UpdateAsync(CartItem cartItem);
         Task UpdateRangeAsync(CartItem[] cartItems);
+        Task Delete(Guid cartId, Guid itemId);
     }
 }

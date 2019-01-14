@@ -9,5 +9,7 @@ namespace EStalls.Data.Interfaces
     public interface IAppUserService
     {
         IEnumerable<AppUser> GetAll();
+        AppUser Get(string id);
+        Task<AppUser> GetAsync(string id);
     }
 }
