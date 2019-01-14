@@ -1,0 +1,13 @@
+﻿@using EStalls.Pages.Purchase
+@{
+}
+
+<div class="row justify-content-center">
+    <ul class="step-bar">
+        <li class="step @PurchaseNavPages.CartNavClass(ViewContext)"><span class="step__title">カート確認</span></li>
+        <li class="step"><span class="step__title">ログイン</span></li>
+        <li class="step @PurchaseNavPages.PaymentNavClass(ViewContext)"><span class="step__title">支払方法</span></li>
+        <li class="step @PurchaseNavPages.ConfirmNavClass(ViewContext)"><span class="step__title">購入確認</span></li>
+        <li class="step @PurchaseNavPages.CompleteNavClass(ViewContext)"><span class="step__title">完了</span></li>
+    </ul>
+</div>
