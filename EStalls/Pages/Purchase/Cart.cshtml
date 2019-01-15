@@ -9,7 +9,7 @@
         <li class="media">
             <figure class="mr-3">
                 <a asp-page="/Item/Index" asp-route-ItemId="@item.ItemId">
-                    <img src=@item.ThumbnailPath alt="@item.Title" width="62"/>
+                    <img src=@item.ThumbnailPath alt="@item.Title" width="62" />
                 </a>
             </figure>
             <div class="media-body">
@@ -29,3 +29,12 @@
         </li>
     }
 </ul>
+
+<dl>
+    <dt>合計</dt>
+    <dd>
+        <strong>@Model.TotalAmount.ToString("C0")</strong>
+    </dd>
+</dl>
+
+<a asp-area="Identity" asp-page="/Account/Login" asp-route-returnUrl="/Purchase/Payment" class="btn btn-primary">次へ</a>

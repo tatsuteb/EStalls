@@ -11,11 +11,9 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace EStalls.Pages.Purchase
 {
-    public class CartModel : PageModel
+    public class CartModel : PurchasePageModel
     {
-        private readonly UserManager<AppUser> _userManager;
         private readonly IAppUserService _appUserService;
-        private readonly ICartService _cartService;
         private readonly ICartItemService _cartItemService;
         private readonly IItemService _itemService;
 
@@ -24,25 +22,11 @@ namespace EStalls.Pages.Purchase
             IAppUserService appUserService,
             ICartService cartService,
             ICartItemService cartItemService,
-            IItemService itemService)
+            IItemService itemService) : base(userManager, cartService)
         {
-            _userManager = userManager;
             _appUserService = appUserService;
-            _cartService = cartService;
             _cartItemService = cartItemService;
             _itemService = itemService;
-        }
-
-        public IEnumerable<CartItemViewModel> Items { get; set; }
-
-        public class CartItemViewModel
-        {
-            public Guid ItemId { get; set; }
-            public Guid SellerId { get; set; }
-            public string ThumbnailPath { get; set; }
-            public string Title { get; set; }
-            public string SellerName { get; set; }
-            public decimal Price { get; set; }
         }
 
         public void OnGet()
@@ -64,6 +48,8 @@ namespace EStalls.Pages.Purchase
                     Price = x.Price,
                     SellerName = _appUserService.Get(x.Uid).DisplayName
                 });
+
+            TotalAmount = Items.Sum(x => x.Price);
         }
 
         public async Task<IActionResult> OnPostDeleteItemAsync(Guid itemId)
@@ -72,21 +58,6 @@ namespace EStalls.Pages.Purchase
             await _cartItemService.Delete(cartId, itemId);
 
             return RedirectToPage();
-        }
-
-        private Guid GetCartId()
-        {
-            var cartId = HttpContext.Session.Get<Guid>(Constants.SessionKeys.CartId);
-
-            if (cartId != Guid.Empty) return cartId;
-
-            var userId = _userManager.GetUserId(User);
-
-            if (userId == null) return Guid.Empty;
-            
-            cartId = _cartService.GetId(new Guid(userId));
-
-            return cartId;
         }
     }
 }
