@@ -76,8 +76,15 @@ namespace EStalls
                 .AddRazorPagesOptions(options =>
                 {
                     // フォルダー、ページごとにポリシーを適用
+                    // 販売者の作品関連ページ
                     options.Conventions
                         .AuthorizeAreaFolder("Seller", "/Items", Constants.PolicyTypes.RequireSellerRole);
+                    // 購入関連ページ
+                    options.Conventions
+                        .AuthorizeFolder("/Purchase");
+                    // カートページはログインしていなくても許可
+                    options.Conventions
+                        .AllowAnonymousToPage("/Purchase/Cart");
                 })
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
