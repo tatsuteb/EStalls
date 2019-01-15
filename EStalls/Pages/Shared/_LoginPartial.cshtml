@@ -18,6 +18,10 @@
 }
 
 <ul class="navbar-nav">
+    <li class="nav-item">
+        <a class="nav-link text-dark" asp-page="/Purchase/Cart" title="Cart">カート</a>
+    </li>
+
     @if (isSignedIn)
     {
         if (isSeller)
@@ -33,7 +37,7 @@
             <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">@displayName</a>
         </li>
         <li class="nav-item">
-            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/", new { area = "" })" method="post">
+            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/", new {area = ""})" method="post">
                 <button type="submit" class="nav-link btn btn-link text-dark">Logout</button>
             </form>
         </li>
