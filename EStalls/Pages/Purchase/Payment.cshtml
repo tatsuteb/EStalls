@@ -3,27 +3,31 @@
 @{
 }
 
+<partial name="_StatusMessage" for="StatusMessage" />
+
 <form method="post">
     <div class="form-row">
         <div class="form-group col-6 offset-3">
             <label>カード番号</label>
-            <input type="text" class="form-control" inputmode="numeric" autocomplete="cc-number" required/>
+            <input type="text" class="form-control" inputmode="numeric" autocomplete="cc-number" required />
         </div>
     </div>
     <div class="form-row">
         <div class="form-group col-2 offset-3">
             <label>有効期限</label>
-            <input type="month" class="form-control" autocomplete="cc-exp" required/>
+            <input type="month" class="form-control" autocomplete="cc-exp" required />
         </div>
         <div class="form-group col-2">
             <label>セキュリティコード</label>
-            <input type="text" class="form-control" inputmode="numeric" autocomplete="cc-csc" required/>
+            <input type="text" class="form-control" inputmode="numeric" autocomplete="cc-csc" required />
         </div>
     </div>
 
     @* TODO: スクリプトから決済サービスのAPIをたたいてトークンを発行後、バックエンド側に送る *@
     <div class="offset-3">
-        @* <button type="button">次へ</button> *@
-        <a asp-page="/Purchase/Confirm" class="btn btn-primary">次へ</a>
+        @* NOTE: ダミーのクレジットカードトークン *@
+        <input type="hidden" name="ccToken" value="dummytoken" />
+        <button type="submit" class="btn btn-primary">次へ</button>
+        @* <a asp-page="/Purchase/Confirm" class="btn btn-primary">次へ</a> *@
     </div>
 </form>
