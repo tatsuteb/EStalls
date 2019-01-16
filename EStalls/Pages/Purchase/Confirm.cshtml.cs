@@ -32,8 +32,17 @@ namespace EStalls.Pages.Purchase
             _itemService = itemService;
         }
 
-        public void OnGet()
+        public IActionResult OnGet()
         {
+            // TODO: Redis等から一時保存したトークンを読みだす
+            var ccToken = HttpContext.Session.Get<string>(Constants.SessionKeys.CcToken);
+            HttpContext.Session.Remove(Constants.SessionKeys.CcToken);
+            if (ccToken == null)
+                return RedirectToPage("/Purchase/Payment",　"ErrorReturn", new
+                {
+                    statusMessage = "Error: カード情報をご確認ください。"
+                });
+
             var cartId = GetCartId();
 
             var cartItemIds = _cartItemService.GetAll()
@@ -53,10 +62,25 @@ namespace EStalls.Pages.Purchase
                 });
 
             TotalAmount = Items.Sum(x => x.Price);
+
+
+            /*
+             * TODO: このタイミングで販売者が価格を変えると、表示価格と販売価格にずれが生じるので、
+             * ロックするか、Redis等にこの時点での販売価格を時間制限付きで記録して決済ほうが安全
+             */
+
+
+            return Page();
         }
 
         public IActionResult OnPostCheckout()
         {
+            var cartId = GetCartId();
+
+            var cartItemIds = _cartItemService.GetAll()
+                .Where(x => x.CartId == cartId)
+                .Select(x => x.ItemId);
+
             return RedirectToPage("/Purchase/Complete");
         }
     }
