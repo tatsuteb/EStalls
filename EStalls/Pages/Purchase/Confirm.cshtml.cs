@@ -19,30 +19,27 @@ namespace EStalls.Pages.Purchase
         private readonly IAppUserService _appUserService;
         private readonly ICartItemService _cartItemService;
         private readonly IItemService _itemService;
+        private readonly IOrderService _orderService;
+        private readonly IOrderItemService _orderItemService;
 
         public ConfirmModel(
             UserManager<AppUser> userManager,
             IAppUserService appUserService,
             ICartService cartService,
             ICartItemService cartItemService,
-            IItemService itemService) : base(userManager, cartService)
+            IItemService itemService,
+            IOrderService orderService,
+            IOrderItemService orderItemService) : base(userManager, cartService)
         {
             _appUserService = appUserService;
             _cartItemService = cartItemService;
             _itemService = itemService;
+            _orderService = orderService;
+            _orderItemService = orderItemService;
         }
 
         public IActionResult OnGet()
         {
-            // TODO: Redis等から一時保存したトークンを読みだす
-            var ccToken = HttpContext.Session.Get<string>(Constants.SessionKeys.CcToken);
-            HttpContext.Session.Remove(Constants.SessionKeys.CcToken);
-            if (ccToken == null)
-                return RedirectToPage("/Purchase/Payment",　"ErrorReturn", new
-                {
-                    statusMessage = "Error: カード情報をご確認ください。"
-                });
-
             var cartId = GetCartId();
 
             var cartItemIds = _cartItemService.GetAll()
@@ -73,13 +70,67 @@ namespace EStalls.Pages.Purchase
             return Page();
         }
 
-        public IActionResult OnPostCheckout()
+        public async Task<IActionResult> OnPostCheckoutAsync()
         {
+            // TODO: Redis等から一時保存したトークンを読みだす
+            var ccToken = HttpContext.Session.Get<string>(Constants.SessionKeys.CcToken);
+            HttpContext.Session.Remove(Constants.SessionKeys.CcToken);
+            if (ccToken == null)
+                return RedirectToPage("/Purchase/Payment", "ErrorReturn", new
+                {
+                    statusMessage = "Error: カード情報をご確認ください。"
+                });
+
+            // TODO: 決済処理
+
+            #region 決済処理
+
             var cartId = GetCartId();
 
-            var cartItemIds = _cartItemService.GetAll()
-                .Where(x => x.CartId == cartId)
-                .Select(x => x.ItemId);
+            var cartItems = _cartItemService.GetAll()
+                .Where(x => x.CartId == cartId);
+
+            var cartItemIds = cartItems.Select(x => x.ItemId);
+
+            var totalAmount = _itemService.GetAll()
+                .Where(x => cartItemIds.Contains(x.Id))
+                .Sum(x => x.Price);
+
+            #endregion
+
+
+            #region ユーザーと購入作品を紐づける
+
+            var uid = _userManager.GetUserId(User);
+
+            // オーダーを作成
+            var order = new Order()
+            {
+                Uid = new Guid(uid),
+                TotalAmount = totalAmount,
+            };
+            await _orderService.AddAsync(order);
+
+            // 購入作品をユーザーと紐づける
+            var orderItems = _itemService.GetAll()
+                .Where(x => cartItemIds.Contains(x.Id))
+                .Select(x => new OrderItem()
+                {
+                    OrderId = order.Id,
+                    ItemId = x.Id,
+                    Title = x.Title,
+                    SellerDisplayName = _appUserService.Get(x.Uid).DisplayName,
+                    Price = x.Price,
+                });
+            await _orderItemService.AddRangeAsync(orderItems);
+
+            #endregion
+
+            #region カートから作品を削除
+
+            await _cartItemService.DeleteRangeAsync(cartItems);
+
+            #endregion
 
             return RedirectToPage("/Purchase/Complete");
         }
