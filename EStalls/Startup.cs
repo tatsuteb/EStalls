@@ -57,6 +57,8 @@ namespace EStalls
             services.AddTransient<IItemDlInfoService, ItemDlInfoService>();
             services.AddTransient<ICartService, CartService>();
             services.AddTransient<ICartItemService, CartItemService>();
+            services.AddTransient<IOrderService, OrderService>();
+            services.AddTransient<IOrderItemService, OrderItemService>();
 
             services.AddAuthorization(options =>
             {
