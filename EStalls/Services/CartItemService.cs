@@ -46,7 +46,7 @@ namespace EStalls.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task Delete(Guid cartId, Guid itemId)
+        public async Task DeleteAsync(Guid cartId, Guid itemId)
         {
             var item = _context.CartItem
                 .SingleOrDefault(x => x.CartId == cartId && x.ItemId == itemId);
@@ -56,6 +56,22 @@ namespace EStalls.Services
 
             _context.CartItem
                 .Remove(item);
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteAsync(CartItem cartItem)
+        {
+            _context.CartItem
+                .Remove(cartItem);
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteRangeAsync(IEnumerable<CartItem> cartItems)
+        {
+            _context.CartItem
+                .RemoveRange(cartItems);
 
             await _context.SaveChangesAsync();
         }
