@@ -33,5 +33,6 @@ namespace EStalls.Constants
     public static class SessionKeys
     {
         public static string CartId => "_CartId";
+        public static string CcToken => "_CcToken";
     }
 }
