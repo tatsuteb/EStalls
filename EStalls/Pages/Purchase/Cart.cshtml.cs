@@ -55,7 +55,7 @@ namespace EStalls.Pages.Purchase
         public async Task<IActionResult> OnPostDeleteItemAsync(Guid itemId)
         {
             var cartId = GetCartId();
-            await _cartItemService.Delete(cartId, itemId);
+            await _cartItemService.DeleteAsync(cartId, itemId);
 
             return RedirectToPage();
         }
