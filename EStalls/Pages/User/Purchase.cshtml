@@ -24,14 +24,30 @@
                     <a href="#">@item.SellerName</a>
                 </p>
                 <span>@item.Price.ToString("C0")</span>
-                <hr/>
                 <ul class="list-unstyled">
-                    <li>
-                        <a href="#" download="File1.png">File1</a>
-                        <a href="#" download="File2.zip">File2</a>
-                    </li>
+                    @foreach (var dlInfo in item.DlInfos)
+                    {
+                        var dlFileNames = dlInfo.DlFileNames.Split(Constants.StringSeparator.DlFileNames);
+                        
+                        <li>
+                            <h5>Version @dlInfo.Version</h5>
+                            <ul class="list-unstyled">
+                                @foreach (var dlFileName in dlFileNames)
+                                {
+                                    var dlLink = $"/{Constants.DirNames.ItemDlFiles}/{dlInfo.Id}/{dlFileName}";
+
+                                    <li>
+                                        <a href="@dlLink" download="@dlFileName">@dlFileName</a>
+                                    </li>
+                                }
+                            </ul>
+                        </li>
+                    }
                 </ul>
+                
+                <hr/>
             </div>
+            
         </li>
     }
 </ul>
