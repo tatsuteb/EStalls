@@ -1,0 +1,37 @@
+﻿@page "/User/{Uid}/Purchase"
+@model EStalls.Pages.User.PurchaseModel
+@{
+}
+
+<h1>購入作品一覧</h1>
+
+<ul class="list-unstyled">
+    @foreach (var item in Model.Items)
+    {
+        <li class="media">
+            <figure class="mr-3">
+                <a asp-page="/Item/Index" asp-route-ItemId="@item.ItemId">
+                    <img src=@item.ThumbnailPath alt="@item.Title" width="62"/>
+                </a>
+            </figure>
+            <div class="media-body">
+                <h5>
+                    <a asp-page="/Item/Index" asp-route-ItemId="@item.ItemId">@item.Title</a>
+                </h5>
+                <p>
+                    @* TODO: ユーザープロフィールページができたら、そこへ飛ばす *@
+                    @* <a asp-page="/Profile" asp-route-ItemId="@item.SellerId">@item.SellerName</a> *@
+                    <a href="#">@item.SellerName</a>
+                </p>
+                <span>@item.Price.ToString("C0")</span>
+                <hr/>
+                <ul class="list-unstyled">
+                    <li>
+                        <a href="#" download="File1.png">File1</a>
+                        <a href="#" download="File2.zip">File2</a>
+                    </li>
+                </ul>
+            </div>
+        </li>
+    }
+</ul>
