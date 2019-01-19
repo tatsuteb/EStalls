@@ -5,6 +5,7 @@
 
 @{
     var displayName = "";
+    var uid = "";
     var isSignedIn = SignInManager.IsSignedIn(User);
     var isSeller = false;
 
@@ -12,6 +13,7 @@
     {
         var user = await UserManager.GetUserAsync(User);
         displayName = user.DisplayName;
+        uid = user.Id;
 
         isSeller = await UserManager.IsInRoleAsync(user, Constants.RoleTypes.Seller);
     }
@@ -33,6 +35,9 @@
                 <a class="nav-link text-dark" asp-area="Seller" asp-page="/Items/Manage/Index" title="Register">作品管理</a>
             </li>
         }
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="" asp-page="/User/Purchase" asp-route-Uid="@uid" title="Manage">購入作品</a>
+        </li>
         <li class="nav-item">
             <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">@displayName</a>
         </li>
