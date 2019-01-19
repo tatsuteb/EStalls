@@ -94,7 +94,7 @@ namespace EStalls.Areas.Seller.Pages.Items.Manage
                 {
                     ItemId = ItemId,
                     Version = Input.Version,
-                    DlFileNames = string.Join(",", newDlFileNames),
+                    DlFileNames = string.Join(Constants.StringSeparator.DlFileNames, newDlFileNames),
                 };
                 await _itemDlInfoService.AddItemDlInfoAsync(newItemDlInfo);
 

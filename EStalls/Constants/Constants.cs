@@ -35,4 +35,9 @@ namespace EStalls.Constants
         public static string CartId => "_CartId";
         public static string CcToken => "_CcToken";
     }
+
+    public static class StringSeparator
+    {
+        public static string DlFileNames => ",";
+    }
 }
