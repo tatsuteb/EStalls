@@ -5,6 +5,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using EStalls.Data.Interfaces;
 using EStalls.Data.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -12,25 +13,25 @@ namespace EStalls.Pages.User
 {
     public class PurchaseModel : PageModel
     {
+        private readonly UserManager<AppUser> _userManager;
         private readonly IOrderService _orderService;
         private readonly IOrderItemService _orderItemService;
         private readonly IItemService _itemService;
         private readonly IItemDlInfoService _itemDlInfoService;
 
         public PurchaseModel(
+            UserManager<AppUser> userManager,
             IOrderService orderService,
             IOrderItemService orderItemService,
             IItemService itemService,
             IItemDlInfoService itemDlInfoService)
         {
+            _userManager = userManager;
             _orderService = orderService;
             _orderItemService = orderItemService;
             _itemService = itemService;
             _itemDlInfoService = itemDlInfoService;
         }
-
-        [BindProperty(SupportsGet = true)]
-        public Guid Uid { get; set; }
 
         public IEnumerable<PurchaseItemViewModel> Items { get; set; }
 
@@ -46,10 +47,17 @@ namespace EStalls.Pages.User
             public IEnumerable<ItemDlInfo> DlInfos { get; set; }
         }
 
-        public void OnGet()
+        public IActionResult OnGet()
         {
+            // ユーザーIDを取得
+            // 本人の購入作品以外は見ることができない
+            if (!Guid.TryParse(_userManager.GetUserId(User), out var uid))
+            {
+                return RedirectToPage("/Index");
+            }
+
             // ユーザーに紐づくオーダーIDを取得
-            var orderIds = _orderService.GetByUid(Uid)
+            var orderIds = _orderService.GetByUid(uid)
                 .Select(x => x.Id);
             // オーダーの注文詳細を取得
             var orderItems = _orderItemService.GetAll()
@@ -80,6 +88,8 @@ namespace EStalls.Pages.User
                         DlInfos = _itemDlInfoService.GetItemDlInfosByItemId(x.Id)
                     };
                 });
+
+            return Page();
         }
     }
 }
