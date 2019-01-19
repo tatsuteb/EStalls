@@ -87,6 +87,9 @@ namespace EStalls
                     // カートページはログインしていなくても許可
                     options.Conventions
                         .AllowAnonymousToPage("/Purchase/Cart");
+                    // 購入作品一覧ページ
+                    options.Conventions
+                        .AuthorizePage("/User/Purchase");
                 })
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
