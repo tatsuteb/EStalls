@@ -10,5 +10,6 @@ namespace EStalls.Data.Interfaces
     {
         Task AddAsync(OrderItem orderItem);
         Task AddRangeAsync(IEnumerable<OrderItem> orderItems);
+        IEnumerable<OrderItem> GetAll();
     }
 }

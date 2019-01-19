@@ -32,5 +32,10 @@ namespace EStalls.Services
 
             await _context.SaveChangesAsync();
         }
+
+        public IEnumerable<OrderItem> GetAll()
+        {
+            return _context.OrderItem;
+        }
     }
 }
