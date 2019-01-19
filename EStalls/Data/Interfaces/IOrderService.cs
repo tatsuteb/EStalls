@@ -9,5 +9,7 @@ namespace EStalls.Data.Interfaces
     public interface IOrderService
     {
         Task AddAsync(Order order);
+        IEnumerable<Order> GetAll();
+        IEnumerable<Order> GetByUid(Guid uid);
     }
 }

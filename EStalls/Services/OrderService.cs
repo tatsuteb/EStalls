@@ -27,5 +27,16 @@ namespace EStalls.Services
 
             await _context.SaveChangesAsync();
         }
+
+        public IEnumerable<Order> GetAll()
+        {
+            return _context.Order;
+        }
+
+        public IEnumerable<Order> GetByUid(Guid uid)
+        {
+            return _context.Order
+                .Where(x => x.Uid == uid);
+        }
     }
 }
