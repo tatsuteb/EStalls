@@ -1,0 +1,20 @@
+﻿@page "/User/{Uid}/Profile"
+@model EStalls.Pages.User.ProfileModel
+@{
+    ViewData["Title"] = "プロフィール";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<figure class="card border-dark" style="max-width: 18rem;">
+    <img class="card-img-top"
+         src=@($"/{Constants.DirNames.UserFiles}/{Model.Uid}/{Constants.FileNames.ProfileFileName}.png")
+         alt="@Model.DisplayName" />
+    <figcaption class="card-body">
+        @if (Model.IsSeller)
+        {
+            <strong>Seller</strong>
+        }
+        @Model.DisplayName
+    </figcaption>
+</figure>
