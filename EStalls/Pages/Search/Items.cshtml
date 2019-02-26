@@ -3,21 +3,19 @@
 @{
 }
 
-<div class="row justify-content-start">
+<div class="card-columns justify-content-start pt-3 px-2">
     @foreach (var item in Model.Items)
     {
-        <div class="col-4 col-sm px-2">
-            <figure class="card border-dark" style="max-width: 18rem;">
-                <a asp-page="/Item/Index" asp-route-ItemId="@item.Id">
-                    <img class="card-img-top"
-                         src=@($"/{Constants.DirNames.ItemPreviewFiles}/{item.Id}/{Constants.DirNames.ItemThumbnailFile}/{item.ThumbnailFileName}")
-                         alt="@item.Title" />
-                </a>
-                <figcaption class="card-body">
-                    <h5 class="card-title"><a asp-page="/Item" asp-route-ItemId="@item.Id" class="text-dark">@item.Title</a></h5>
-                    <p class="card-text text-dark">@item.Description</p>
-                </figcaption>
-            </figure>
-        </div>
+        <figure class="card border-dark" style="max-width: 18rem;">
+            <a asp-page="/Item/Index" asp-route-ItemId="@item.Id" style="max-height: 300px; overflow: hidden;">
+                <img class="card-img-top"
+                     src=@($"/{Constants.DirNames.ItemPreviewFiles}/{item.Id}/{Constants.DirNames.ItemThumbnailFile}/{item.ThumbnailFileName}")
+                     alt="@item.Title" />
+            </a>
+            <figcaption class="card-body">
+                <h5 class="card-title"><a asp-page="/Item" asp-route-ItemId="@item.Id" class="text-dark">@item.Title</a></h5>
+                <p class="card-text text-dark">@item.Description</p>
+            </figcaption>
+        </figure>
     }
 </div>
